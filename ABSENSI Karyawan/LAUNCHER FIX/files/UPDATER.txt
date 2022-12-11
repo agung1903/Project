@@ -1,0 +1,7 @@
+TGIABSENSIScan.exe
+PENGATURAN.exe
+libmysql50.dll
+files\logo.jpg
+files\barcode.jpg
+settingapp.ini
+files\

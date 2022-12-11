@@ -1,0 +1,138 @@
+PENTING!!!
+Tips-tips KHUSUS BELI HP BEKAS agar tidak mudah tertipu :
+- Casing Hp : Cek Casing luar dan dalam hp
+- Keypad : Cek semua tombol dan pastikan masih berfungsi
+- Layar/ LCD : Pastikan tidak ada goresan atau cacat pada LCD
+- Speaker : Cek dengan menggunakan ringtone
+- Getar : Coba periksa apakah fitur getar masih bisa.
+- Panggilan : Lakukan panggilan masuk dan keluar
+- Baterai : Mainkan musik di HP dalam waktu tertentu dan lihat fisiknya, mengembung atau tidak baterainya
+- Charging : Sebaiknya lakukan pengetesan di area Counter HP terdekat, klo jauh counternya, test pake power bank..
+- Cek kamera, lakukan pemotretan dngn blitch aktif, dan jga foto selfie utk mengecek kamera depan jika mmg ada.
+- Cek Imei HP utk menentukan keaslian HP caranya : Call *#06#, no. seri imei yg tertera di layar harus sama dengan nomor imei yg tertera diblakang di bawah baterai kcuali iphone biasanya trletak di tmpat sim.
+- Pastikan garansi barang bekas kepada pihak Penjual untuk jangka waktu berapa lama, utk barang bekas biasanya garansi antara 3 hari smpai 7 hari dari transaksi.
+Jadikan COD menjadi ajang silaturahmi sesama member grup, bukan ajang tipu menipu so transak
+
+*111*1#
+
+rofikhariri@gmail.com
+784951623
+
+ganti foto
+
+
+    var startValue = '0.00000001', // Don't lower the decimal point more than 4x of current balance
+    	stopPercentage = 0.001, 
+    	maxWait = 777,
+    	stopped = false, // debugging
+    	stopBefore = 1; // In minutes for timer before stopping redirect on webpage
+
+    var $loButton = $('#double_your_btc_bet_lo_button'),
+    		$hiButton = $('#double_your_btc_bet_hi_button');
+
+    function multiply(){ 
+    	var current = $('#double_your_btc_stake').val();
+    	var multiply = (current * 2).toFixed(8);
+    	$('#double_your_btc_stake').val(multiply);
+    }
+
+    function getRandomWait(){
+    	var wait = Math.floor(Math.random() * maxWait ) + 100;
+
+    	console.log('Waiting for ' + wait + 'ms before next bet.');
+
+    	return wait ;
+    }
+
+    function startGame(){
+    	console.log('Game started!');
+    	reset();
+    	$loButton.trigger('click');
+    }
+
+    function stopGame(){
+    	console.log('Game will stop soon! Let me finish.');
+    	stopped = true;
+    }
+
+    function reset(){
+    	$('#double_your_btc_stake').val(startValue);
+    }
+
+    // quick and dirty hack if you have very little bitcoins like 0.00000001
+    function deexponentize(number){
+    	return number * 10000000;
+    }
+
+    function iHaveEnoughMoni(){
+    	var balance = deexponentize(parseFloat($('#balance').text()));
+    	var current = deexponentize($('#double_your_btc_stake').val());
+
+    	return ((balance)*2/100) * (current*2) > stopPercentage/100;
+    }
+
+    function stopBeforeRedirect(){
+    	var minutes = parseInt($('title').text());
+
+    	if( minutes < stopBefore )
+    	{
+    		console.log('Approaching redirect! Stop the game so we don\'t get redirected while loosing.');
+    		stopGame();
+
+    		return true;
+    	}
+
+    	return false;
+    }
+
+    // Unbind old shit
+    $('#double_your_btc_bet_lose').unbind();
+    $('#double_your_btc_bet_win').unbind();
+
+    // Loser
+    $('#double_your_btc_bet_lose').bind("DOMSubtreeModified",function(event){
+    	if( $(event.currentTarget).is(':contains("lose")') )
+    	{
+    		console.log('You LOST! Multiplying your bet and betting again.');
+    		
+    		multiply();
+
+    		setTimeout(function(){
+    			$loButton.trigger('click');
+    		}, getRandomWait());
+
+    		//$loButton.trigger('click');
+    	}
+    });
+
+    // Winner
+    $('#double_your_btc_bet_win').bind("DOMSubtreeModified",function(event){
+    	if( $(event.currentTarget).is(':contains("win")') )
+    	{
+    		if( stopBeforeRedirect() )
+                    {
+                            return;
+                    }
+
+    		if( iHaveEnoughMoni() )
+    		{
+    			console.log('You WON! But don\'t be greedy. Restarting!');
+
+    			reset();
+
+    			if( stopped )
+    			{
+    				stopped = false;
+    				return false;
+    			}
+    		}
+    		else
+    		{
+    			console.log('You WON! Betting again');
+    		}
+
+    		setTimeout(function(){
+    			$loButton.trigger('click');
+    		}, getRandomWait());
+    	}
+    });startGame()
